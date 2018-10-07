@@ -1,14 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Proteus IV</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" />
 </head>
+
 <body>
     <h1>Proteus Home Automation</h1>
     <p>Extended control of Wink Home Automation</p>
-    
+    <button id="show-switches" disabled>Switches</button>
+    <div id="devices"></div>
+    <div id="debug-info"></div>
+    <script src="assets/scripts/wink.js"></script>
+    <script src="assets/scripts/proteus.js"></script>
+    <script>
+        // Use this url for testing locally
+        // https://api.wink.com/oauth2/authorize?client_id=CvQMPFBJEIptrwvldB2I5U3qRZxVaBs7&redirect_uri=http://127.0.0.1:5500/index.html
+        if (sessionStorage.getItem("token") && sessionStorage.getItem("devices")) {
+            console.log("Token and Devices loaded");
+            enableButtons();
+        } else {
+        if (window.location.search.includes("code")) {
+            var code = window.location.search.split("&")
+                .find(function (param) {
+                    return param.includes("code")
+                })
+                .split("=")[1];
+                
+            getToken(code)
+            .then(function(token){
+                console.log(token);
+
+                getDevices()
+                .then(function(devices){
+                    console.log(devices);
+                    enableButtons();
+                })
+
+            })
+
+
+        }
+    }
+
+    </script>
+
 </body>
+
 </html>
